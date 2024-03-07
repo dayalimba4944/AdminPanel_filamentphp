@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PostType extends Model
+class Banner extends Model
 {
     use HasFactory;
 
-    protected $table = 'post_types';
-
     protected $fillable = [
-        'post_name',
-        'media_type',
+        'banner_place',
+        'title',
+        'description',
+        'media_types',
         'media',
         'status',
     ];

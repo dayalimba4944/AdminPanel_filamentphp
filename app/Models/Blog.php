@@ -18,4 +18,9 @@ class Blog extends Model
         'media',
         'status',
     ];
+
+    public function getStatusAttribute($value)
+    {
+        return $value == '1' ? 'Active' : 'deactive';
+    }
 }

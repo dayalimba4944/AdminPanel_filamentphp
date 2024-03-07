@@ -19,8 +19,14 @@ class Employee extends Model
         'profile_picture',
         'status',
     ];
-    // public function getStatusAttribute($value)
-    // {
-    //     return $value == '1' ? 'Active' : 'Inactive';
-    // }
+
+    public function postType()
+    {
+        return $this->belongsTo(PostType::class, 'post_type_id');
+    }
+
+    public function getStatusAttribute($value)
+    {
+        return $value == '1' ? 'Active' : 'deactive';
+    }
 }

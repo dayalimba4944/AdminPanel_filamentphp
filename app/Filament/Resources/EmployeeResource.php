@@ -20,7 +20,10 @@ use Laravel\Nova\Fields\BadgeColumn;
 use Filament\Tables\Columns\Text;
 use Filament\Tables\Columns\Column;
 use Filament\Forms\Components\FileUpload;
-
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\SelectFilter;
 
 class EmployeeResource extends Resource
 {
@@ -65,6 +68,7 @@ class EmployeeResource extends Resource
                 ->required()
                 ->maxLength(255),
             Forms\Components\Select::make('status')
+                ->required()
                 ->options([
                     '1' => 'active',
                     '0' => 'deactive',
@@ -74,21 +78,25 @@ class EmployeeResource extends Resource
                 ->label('Profile Picture')
                 ->required()
                 // ->maxFiles(1),
-            ]);
+        ]);
         
     }
 
     public static function table(Table $table): Table
     {
+        $index = 1;
         return $table
             ->columns([
-                // Tables\Columns\TextColumn::make('post_type_id')->label('Post Type'),
-                Tables\Columns\TextColumn::make('post_type_id')
-                    ->label('Post Type')
-                    ->value(function ($value, $record) {
-                        $postType = PostType::where('id', $record->post_type_id)->first();
-                        return $postType ? $postType->post_name : null;
-                    }),
+                Tables\Columns\TextColumn::make('index')->getStateUsing(
+                    $index
+                ),
+                Tables\Columns\TextColumn::make('post_type_id')->label('Post Type'),
+                // Tables\Columns\TextColumn::make('post_type_id')
+                //     ->label('Post Type')
+                //     ->value(function ($value, $record) {
+                //         $postType = PostType::find($value);
+                //         return $postType ? $postType->post_name : null;
+                //     }),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\ImageColumn::make('profile_picture'),
                 Tables\Columns\TextColumn::make('email'),
@@ -96,23 +104,27 @@ class EmployeeResource extends Resource
                 Tables\Columns\TextColumn::make('phone_number'),
                 Tables\Columns\TextColumn::make('address'),
                 Tables\Columns\TextColumn::make('status'),
+                // TextColumn::make('status')
+                // ->label('Status')
+                // ->renderer(function ($value, $record) {
+                //     $color = ($record->status == 0) ? 'red' : 'green';
+                //     return "<span style='color: $color;'>{$value}</span>";
+                // }),
+                // TextColumn::make('status')
+                //     ->label('Status')
+                //     ->value(function ($value, $record) {
+                //         $color = ($record->status == 0) ? 'red' : 'green';
+                //         return "<span style='color: $color;'>$value</span>";
+                //     }),
 
             ])
-            // ->columns([
-            //     TextColumn::make('post_type_id')
-            //         ->label('Post Type')
-            //         ->getValueUsing(fn ($model) => $model->postType->post_name ?? ''),
-
-            //     TextColumn::make('name'),
-            //     TextColumn::make('profile_picture'),
-            //     TextColumn::make('email'),
-            //     TextColumn::make('phone_code'),
-            //     TextColumn::make('phone_number'),
-            //     TextColumn::make('address'),
-            //     TextColumn::make('status'),
-            // ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                ->options([
+                    '1' => 'active',
+                    '0' => 'deactive',
+                ])
+                ->attribute('status')
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
