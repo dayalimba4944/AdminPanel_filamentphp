@@ -19,8 +19,8 @@ class Blog extends Model
         'status',
     ];
 
-    public function getStatusAttribute($value)
-    {
-        return $value == '1' ? 'Active' : 'deactive';
-    }
+    // public function getStatusAttribute($value)
+    // {
+    //     return $value == '1' ? 'Active' : 'deactive';
+    // }
 }

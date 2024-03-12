@@ -81,22 +81,29 @@ class EmployeeResource extends Resource
         ]);
         
     }
-
+    // protected static int $index = 0;
     public static function table(Table $table): Table
     {
-        $index = 1;
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('index')->getStateUsing(
-                    $index
-                ),
+                // TextColumn::make('index')
+                //     ->label('Index')
+                //     ->getStateUsing(fn ($record) => self::$index +=1 ),
+
+                // TextColumn::make('Index')
+                // ->label('SR. NO. ')
+                // ->getStateUsing(function ($record, $column) {
+                //     static $index = 1;
+                //     return $index++;
+                // }),
+                // TextColumn::make('Index')
+                // ->label('SR. NO. ')
+                // ->getValue(fn ($record, $column) => $table->getPaginator()->firstItem() + $column->getIndex($record)),
+
                 Tables\Columns\TextColumn::make('post_type_id')->label('Post Type'),
-                // Tables\Columns\TextColumn::make('post_type_id')
-                //     ->label('Post Type')
-                //     ->value(function ($value, $record) {
-                //         $postType = PostType::find($value);
-                //         return $postType ? $postType->post_name : null;
-                //     }),
+                TextColumn::make('post_type_id')
+                ->label('Post Type')
+                ->getStateUsing(fn ($record) => $record->postType->post_name),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\ImageColumn::make('profile_picture'),
                 Tables\Columns\TextColumn::make('email'),
@@ -104,18 +111,13 @@ class EmployeeResource extends Resource
                 Tables\Columns\TextColumn::make('phone_number'),
                 Tables\Columns\TextColumn::make('address'),
                 Tables\Columns\TextColumn::make('status'),
-                // TextColumn::make('status')
-                // ->label('Status')
-                // ->renderer(function ($value, $record) {
-                //     $color = ($record->status == 0) ? 'red' : 'green';
-                //     return "<span style='color: $color;'>{$value}</span>";
-                // }),
-                // TextColumn::make('status')
-                //     ->label('Status')
-                //     ->value(function ($value, $record) {
-                //         $color = ($record->status == 0) ? 'red' : 'green';
-                //         return "<span style='color: $color;'>$value</span>";
-                //     }),
+                TextColumn::make('status')
+                ->label('Status')
+                ->getStateUsing(fn ($record) => ($record->status == 1) ?  "active" : "deactive")
+                ->color(fn (string $state): string => match ($state) {
+                    "active" => 'success',
+                    "deactive" => 'danger',
+                }),
 
             ])
             ->filters([

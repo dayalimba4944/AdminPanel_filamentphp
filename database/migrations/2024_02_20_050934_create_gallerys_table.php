@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('gallerys', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_id')->nullable()->constrained('events');
+            $table->foreignId('event_id')->nullable();
             $table->string('media_type');
             $table->string('media');
             $table->enum('status', [0, 1])->default(0);

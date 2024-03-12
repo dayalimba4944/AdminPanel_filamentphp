@@ -114,6 +114,8 @@ class BannerResource extends Resource
 
                 Forms\Components\FileUpload::make('media')
                     ->label('Media')
+                    ->downloadable()
+                    ->removeUploadedFileButtonPosition('right')
                     ->required(),
         ]);
     }
@@ -146,7 +148,13 @@ class BannerResource extends Resource
                 Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\TextColumn::make('media_types'),
                 Tables\Columns\ImageColumn::make('media'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')
+                ->label('Status')
+                ->getStateUsing(fn ($record) => ($record->status == 1) ?  "active" : "deactive")
+                ->color(fn (string $state): string => match ($state) {
+                    "active" => 'success',
+                    "deactive" => 'danger',
+                }),
             ])
             ->filters([
                 //

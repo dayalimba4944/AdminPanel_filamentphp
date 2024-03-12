@@ -58,7 +58,13 @@ class EmployeePostTypeResource extends Resource
                 Tables\Columns\TextColumn::make('post_name'),
                 // Tables\Columns\TextColumn::make('media_type'),
                 // Tables\Columns\TextColumn::make('media'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('status')
+                ->label('Status')
+                ->getStateUsing(fn ($record) => ($record->status == 1) ?  "active" : "deactive")
+                ->color(fn (string $state): string => match ($state) {
+                    "active" => 'success',
+                    "deactive" => 'danger',
+                }),
             ])
             ->filters([
                 //

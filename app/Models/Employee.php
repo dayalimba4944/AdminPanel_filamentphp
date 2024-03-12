@@ -25,8 +25,8 @@ class Employee extends Model
         return $this->belongsTo(PostType::class, 'post_type_id');
     }
 
-    public function getStatusAttribute($value)
-    {
-        return $value == '1' ? 'Active' : 'deactive';
-    }
+    // public function getStatusAttribute($value)
+    // {
+    //     return $value == '1' ? 'Active' : 'deactive';
+    // }
 }

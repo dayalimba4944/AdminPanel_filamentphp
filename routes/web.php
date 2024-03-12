@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/post-types/{post_type}/show', function () {
+    return redirect()->url('/admin/employees');
+})->name('post_types.show');

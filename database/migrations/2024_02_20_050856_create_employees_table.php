@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_type_id')->constrained('post_types');
+            $table->foreignId('post_type_id');
             $table->string('name');
             $table->string('profile_picture');
             $table->string('email');
