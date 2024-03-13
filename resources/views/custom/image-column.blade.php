@@ -1,6 +1,7 @@
-{{-- custom/image-column.blade.php --}}
-@if ($record->profile_picture)
-    <img src="{{ asset('path/to/storage/' . $record->profile_picture) }}" alt="Profile Picture" style="max-width: 50px; max-height: 50px;">
-@else
-    No Image
-@endif
+<!-- resources/views/filament/forms/components/custom-field.blade.php -->
+
+<div>
+    <label for="{{ $name }}">{{ $label }}</label>
+    <input type="text" id="{{ $name }}" name="{{ $name }}" value="{{ $value }}" {!! $attributes->merge(['class' => 'form-input']) !!}>
+    @error($name) <span class="error">{{ $message }}</span> @enderror
+</div>

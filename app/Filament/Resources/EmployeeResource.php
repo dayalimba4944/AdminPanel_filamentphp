@@ -96,9 +96,17 @@ class EmployeeResource extends Resource
                 //     static $index = 1;
                 //     return $index++;
                 // }),
-                // TextColumn::make('Index')
-                // ->label('SR. NO. ')
-                // ->getValue(fn ($record, $column) => $table->getPaginator()->firstItem() + $column->getIndex($record)),
+                // TextColumn::make('serial_number')
+                //     ->label('SR. NO.')
+                //     ->getStateUsing(function ($record) use ($table) {
+                //         return $table->getPaginator()->firstItem() + $table->getPaginator()->perPage() * ($table->getPaginator()->currentPage() - 1) + $table->getPaginator()->currentPage();
+                //     }),
+                TextColumn::make('serial_number')
+                ->label('SR. NO.')
+                ->getStateUsing(function ($record) {
+                    $position = $record->newQuery()->where('id', '<=', $record->id)->count();
+                    return $position;
+                }),
 
                 Tables\Columns\TextColumn::make('post_type_id')->label('Post Type'),
                 TextColumn::make('post_type_id')

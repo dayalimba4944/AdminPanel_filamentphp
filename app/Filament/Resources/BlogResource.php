@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\TextColumn;
 
 class BlogResource extends Resource
 {
@@ -85,6 +86,13 @@ class BlogResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('serial_number')
+                ->label('SR. NO.')
+                ->getStateUsing(function ($record) {
+                    $position = $record->newQuery()->where('id', '<=', $record->id)->count();
+                    return $position;
+                }),
+
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('header'),
                 Tables\Columns\TextColumn::make('content'),

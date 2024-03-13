@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Infolists\Components\KeyValueEntry;
+use Filament\Tables\Columns\TextColumn;
 
 class EmployeePostTypeResource extends Resource
 {
@@ -55,6 +56,13 @@ class EmployeePostTypeResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('serial_number')
+                ->label('SR. NO.')
+                ->getStateUsing(function ($record) {
+                    $position = $record->newQuery()->where('id', '<=', $record->id)->count();
+                    return $position;
+                }),
+
                 Tables\Columns\TextColumn::make('post_name'),
                 // Tables\Columns\TextColumn::make('media_type'),
                 // Tables\Columns\TextColumn::make('media'),
