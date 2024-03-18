@@ -13,6 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Tabs;
+// use Filament\Forms\Components;
+
 
 class BlogResource extends Resource
 {
@@ -22,65 +25,116 @@ class BlogResource extends Resource
 
     // protected static ?string $navigationLabel = 'Post Type';
     
-    protected static ?string $navigationGroup = 'Mange Content';
+    protected static ?string $navigationGroup = 'Manage Content';
 
-    public static function form(Form $form): Form
-    {
-        return $form
-        ->schema([
-                // Forms\Components\Select::make('place')
-                //     ->label('Place')
-                //     // ->options(PostType::pluck('post_name', 'id')->toArray())
-                //     ->required(),
+    // public static function form(Form $form): Form
+    // {
+    //     return $form
+    //     ->schema([
+    //             // Forms\Components\Select::make('place')
+    //             //     ->label('Place')
+    //             //     // ->options(PostType::pluck('post_name', 'id')->toArray())
+    //             //     ->required(),
 
-                Forms\Components\TextInput::make('title')
-                    ->label('Title')
-                    ->required()
-                    ->rules(['regex:/^[a-zA-Z\s]+$/'])
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('header')
-                    ->label('Header')
-                    ->required()
-                    ->maxLength(255),
+    //             Forms\Components\TextInput::make('title')
+    //                 ->label('Title')
+    //                 ->required()
+    //                 ->rules(['regex:/^[a-zA-Z\s]+$/'])
+    //                 ->maxLength(255),
+    //             Forms\Components\TextInput::make('header')
+    //                 ->label('Header')
+    //                 ->required()
+    //                 ->maxLength(255),
 
-                Forms\Components\RichEditor::make('content')
-                    ->label('Content')
-                    ->toolbarButtons([
-                        // 'attachFiles',
-                        'blockquote',
-                        'bold',
-                        'bulletList',
-                        'codeBlock',
-                        'h2',
-                        'h3',
-                        'italic',
-                        'link',
-                        'orderedList',
-                        'redo',
-                        'strike',
-                        'underline',
-                        'undo',
-                    ])
-                    ->required()
-                    ->columnSpanFull(),
+    //             Forms\Components\RichEditor::make('content')
+    //                 ->label('Content')
+    //                 ->toolbarButtons([
+    //                     // 'attachFiles',
+    //                     'blockquote',
+    //                     'bold',
+    //                     'bulletList',
+    //                     'codeBlock',
+    //                     'h2',
+    //                     'h3',
+    //                     'italic',
+    //                     'link',
+    //                     'orderedList',
+    //                     'redo',
+    //                     'strike',
+    //                     'underline',
+    //                     'undo',
+    //                 ])
+    //                 ->required()
+    //                 ->columnSpanFull(),
 
-            Forms\Components\Select::make('status')
-                ->options([
-                    '1' => 'active',
-                    '0' => 'deactive',
-                ]),
+    //         Forms\Components\Select::make('status')
+    //             ->options([
+    //                 '1' => 'active',
+    //                 '0' => 'deactive',
+    //             ]),
 
-            Forms\Components\Select::make('media_type')
-                ->options([
-                    'Image' => 'Image',
-                    'Video' => 'Video',
+    //         Forms\Components\Select::make('media_type')
+    //             ->options([
+    //                 'Image' => 'Image',
+    //                 'Video' => 'Video',
                     
-                ])->required(),
-            Forms\Components\FileUpload::make('media')
-                ->label('Media')
-                ->required(),
+    //             ])->required(),
+    //         Forms\Components\FileUpload::make('media')
+    //             ->label('Media')
+    //             ->required(),
+    //     ]);
+    // }
+    public static function form(Form $form): Form
+{
+    return $form
+        ->schema([
+            Tabs::make('Tabs')
+                ->tabs([
+                    Tabs\Tab::make('Tab 1')
+                        ->schema([
+                            Forms\Components\TextInput::make('title')
+                                ->label('Title')
+                                ->required()
+                                ->rules(['regex:/^[a-zA-Z\s]+$/'])
+                                ->maxLength(255),
+                            // Add more form fields for Tab 1 if needed
+                        ]),
+                    Tabs\Tab::make('Tab 2')
+                        ->schema([
+                            Forms\Components\TextInput::make('header')
+                                ->label('Header')
+                                ->required()
+                                ->maxLength(255),
+                            // Add more form fields for Tab 2 if needed
+                        ]),
+                    Tabs\Tab::make('Tab 3')
+                        ->schema([
+                            Forms\Components\RichEditor::make('content')
+                                ->label('Content')
+                                ->toolbarButtons([
+                                    // 'attachFiles',
+                                    'blockquote',
+                                    'bold',
+                                    'bulletList',
+                                    'codeBlock',
+                                    'h2',
+                                    'h3',
+                                    'italic',
+                                    'link',
+                                    'orderedList',
+                                    'redo',
+                                    'strike',
+                                    'underline',
+                                    'undo',
+                                ])
+                                ->required()
+                                ->columnSpanFull(),
+                            // Add more form fields for Tab 3 if needed
+                        ]),
+                ])
+                ->activeTab(2),
         ]);
-    }
+}
 
     public static function table(Table $table): Table
     {

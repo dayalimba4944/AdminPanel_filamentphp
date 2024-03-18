@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BannerResource\Pages;
-use App\Filament\Resources\BannerResource\RelationManagers;
 use App\Models\Banner;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,6 +12,17 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Livewire\WithFileUploads;
+use Filament\Forms\Components\Section;
+
+use Filament\Forms\ComponentContainer;
+// use Filament\Forms\Form;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload;
+// use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+
+use Filament\Forms\Components\ViewField;
 
 class BannerResource extends Resource
 {
@@ -21,259 +31,430 @@ class BannerResource extends Resource
     protected static ?string $model = Banner::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
-    // protected static ?string $navigationIcon = 'heroicon-o-photo-square';
-
-    // protected static ?string $navigationLabel = 'Post Type';
     
-    protected static ?string $navigationGroup = 'Mange Content';
+    protected static ?string $navigationGroup = 'Manage Content';
 
-    // private function getMediaValidationRules($mediaType)
+
+    
+    // public static function form(Form $form): Form
     // {
-    //     // Common file rules
-    //     $commonRules = ['file'];
+    //     // Define the common fields
+    //     $commonFields = [
+    //         Select::make('banner_place')
+    //             ->label('Banner Place')
+    //             ->required()
+    //             ->options([
+    //                 'Home' => 'Home',
+    //                 'About_us' => 'About Us',
+    //             ]),
+    //         TextInput::make('title')
+    //             ->label('Title')
+    //             ->required()
+    //             ->maxLength(255),
+    //         Textarea::make('description')
+    //             ->label('Description')
+    //             ->maxLength(255)
+    //             ->required(),
+    //         Select::make('status')
+    //             ->required()
+    //             ->options([
+    //                 '0' => 'Active',
+    //                 '1' => 'Deactive',
+    //             ]),
+    //         Select::make('media_types')
+    //             ->label('Media Type')
+    //             ->required()
+    //             ->options([
+    //                 'image' => 'Image',
+    //                 'video' => 'Video',
+    //             ])
+    //             // ->onChange(function (string $value) {
+    //             //     // Callback function to be called when the value of the select component changes
+    //             //     if ($value === 'image' || $value === 'video') {
+    //             //         // Add the media section to the form schema
+    //             //         $this->form->schema->add($this->mediaSection);
+    //             //     } else {
+    //             //         // Remove the media section from the form schema
+    //             //         $this->form->schema->forget($this->mediaSection);
+    //             //     }
+    //             // })
+    //             ->reactive(), // Make the component reactive
+    //     ];
     
-    //     if ($mediaType === 'image') {
-    //         $imageRules = ['mimes:jpeg,png,jpg,gif'];
-    //         return array_merge($commonRules, $imageRules);
-    //     } elseif ($mediaType === 'video') {
-    //         $videoRules = ['mimes:mp4,mov,avi'];
-    //         return array_merge($commonRules, $videoRules);
-    //     }
+    //     // Define the media-specific field
+    //     $mediaField = FileUpload::make('media')
+    //         ->label('Media')
+    //         ->downloadable()
+    //         ->imageEditor()
+    //         ->required();
     
-    //     // If media type is not specified, return an empty array to disable the button
-    //     return [];
+    //     // Create the section for common fields
+    //     $commonSection = Section::make('')
+    //         ->schema([...$commonFields])
+    //         ->columns(2);
+    
+    //     // Create the section for media-specific field
+    //     $mediaSection = Section::make('')
+    //         ->schema([$mediaField])
+    //         ->columns(2);
+    
+    //     // Initially, add only the common section
+    //     $form->schema([$commonSection]);
+    
+    //     // // Configure the form to dynamically show/hide the media section based on media_types field value
+    //     // $form->configure(function (ComponentContainer $container) use ($mediaSection) {
+    //     //     $container->state(function (array $state) use ($mediaSection) {
+    //     //         if (isset($state['media_types']) && ($state['media_types'] === 'image' || $state['media_types'] === 'video')) {
+    //     //             $this->schema([$mediaSection]);
+    //     //         } else {
+    //     //             $this->removeComponent($mediaSection);
+    //     //         }
+    //     //     });
+    //     // });
+
+    //     // $form->scripts(function () {
+    //     //     return <<<SCRIPT
+    //     //     document.addEventListener('DOMContentLoaded', function () {
+    //     //         const mediaTypesInput = document.getElementById('media_types');
+    //     //         console.log(mediaTypesInput.value); // Corrected typo in console.log
+    //     //     });
+    //     //     SCRIPT;
+    //     // });
+    
+    //     return $form;
+    // }
+    
+    
+    
+    
+    // public static function form(Form $form): Form
+    // {
+    //     // Define the form fields for the first section of the profile editing
+    //     $firstSectionFields = [
+    //         Select::make('banner_place')
+    //             ->label('Banner Place')
+    //             ->required()
+    //             ->options([
+    //                 'Home' => 'Home',
+    //                 'About_us' => 'About Us',
+    //             ]),
+    //         TextInput::make('title')
+    //             ->label('Title')
+    //             ->required()
+    //             ->maxLength(255),
+    //         Textarea::make('description')
+    //             ->label('Description')
+    //             ->maxLength(255)
+    //             ->required(),
+    //         Select::make('status')
+    //             ->required()
+    //             ->options([
+    //                 '0' => 'Active',
+    //                 '1' => 'Deactive',
+    //             ]),
+    //         Select::make('media_types')
+    //             ->label('Media Type')
+    //             ->required()
+    //             ->options([
+    //                 'image' => 'Image',
+    //                 'video' => 'Video',
+    //             ]),
+    //         Select::make('Image')
+    //             ->label('Image')
+    //             ->required()
+    //             ->options([
+    //                 'image' => 'Image',
+    //                 'video' => 'Video',
+    //             ])
+    //     ];
+    
+    //     // Define the form fields for the second section of the profile editing
+    //     $secondSectionFields = [
+    //         Select::make('banner_place')
+    //             ->label('Banner Place')
+    //             ->required()
+    //             ->options([
+    //                 'Home' => 'Home',
+    //                 'About_us' => 'About Us',
+    //             ]),
+    //         TextInput::make('title')
+    //             ->label('Title')
+    //             ->required()
+    //             ->maxLength(255),
+    //         Textarea::make('description')
+    //             ->label('Description')
+    //             ->maxLength(255)
+    //             ->required(),
+    //         Select::make('status')
+    //             ->required()
+    //             ->options([
+    //                 '0' => 'Active',
+    //                 '1' => 'Deactive',
+    //             ]),
+    //         Select::make('media_types')
+    //             ->label('Media Type')
+    //             ->required()
+    //             ->options([
+    //                 'image' => 'Image',
+    //                 'video' => 'Video',
+    //             ])
+    //     ];
+    
+    //     // // Define the schema for the first section
+    //     // $form->schema($firstSectionFields);
+    
+    //     // // Define the schema for the second section
+    //     // $form->schema($secondSectionFields);
+    //     $firstSection = Section::make('First Section')
+    //     ->schema($firstSectionFields)
+    //     ->columns(2);
+
+    //     // Create the second section
+    //     $secondSection = Section::make('Second Section')
+    //     ->schema($secondSectionFields)
+    //     ->columns(2);
+    
+    //      $form1->schema([$firstSection,$secondSection]);
+    //     $form2->schema([$firstSection,$secondSection]);
+    //     return $form = [$form1 , $form2];
     // }
     
 
+    // use Filament\Forms\ComponentContainer;
+    // use Filament\Forms\Components\Section;
+    // use Filament\Forms\Form;
+    // use Filament\Forms\Components\Select;
+    // use Filament\Forms\Components\FileUpload;
+    // use Filament\Forms\Components\TextInput;
+    // use Filament\Forms\Components\Textarea;
+    
     public static function form(Form $form): Form
     {
-    //    return $allowedFileTypes = ($state->media_types == 'image') ? ['jpg', 'jpeg', 'png'] : ['video/mp4'] ;
-        return $form
-        ->schema([
-            // Forms\Components\Select::make('banner_place')
-            // ->label('banner_place')
-            // // ->options(PostType::where('status', '1')->pluck('post_name', 'id')->toArray())
-            // ->required(),
-            // Forms\Components\TextInput::make('banner_place')
-            //     ->label('Banner Place')
-            //     ->required()
-            //     ->maxLength(255),
-            Forms\Components\Select::make('banner_place')
+        // // Define the form fields for the first section of the profile editing
+        // $firstformFields = [
+        //     Select::make('banner_place')
+        //         ->label('Banner Place')
+        //         ->required()
+        //         ->options([
+        //             'Home' => 'Home',
+        //             'About_us' => 'About Us',
+        //         ]),
+        //     TextInput::make('title')
+        //         ->label('Title')
+        //         ->required()
+        //         ->maxLength(255),
+        //     Textarea::make('description')
+        //         ->label('Description')
+        //         ->maxLength(255)
+        //         ->required(),
+        //     Select::make('status')
+        //         ->required()
+        //         ->options([
+        //             '0' => 'Active',
+        //             '1' => 'Deactive',
+        //         ]),
+        //     Select::make('media_types')
+        //         ->label('Media Type')
+        //         ->required()
+        //         ->options([
+        //             'image' => 'Image',
+        //             'video' => 'Video',
+        //         ]),
+        //     Select::make('Image')
+        //         ->label('Image')
+        //         ->required()
+        //         ->options([
+        //             'image' => 'Image',
+        //             'video' => 'Video',
+        //         ])
+        // ];
+    
+        // Define the form fields for the second section of the profile editing
+        $secondformFields = [
+            Select::make('banner_place')
                 ->label('Banner Place')
                 ->required()
                 ->options([
                     'Home' => 'Home',
                     'About_us' => 'About Us',
                 ]),
-            Forms\Components\TextInput::make('title')
+            TextInput::make('title')
                 ->label('Title')
                 ->required()
                 ->maxLength(255),
-
-
-            Forms\Components\TextInput::make('description')
+            Textarea::make('description')
                 ->label('Description')
-                ->type('tel')
                 ->maxLength(255)
                 ->required(),
-            Forms\Components\Select::make('status')
+            Select::make('status')
                 ->required()
                 ->options([
-                    '0' => 'active',
-                    '1' => 'deactive',
+                    '0' => 'Active',
+                    '1' => 'Deactive',
                 ]),
-                Forms\Components\Select::make('media_types')
+                Select::make('media_types')
                 ->label('Media Type')
                 ->required()
                 ->options([
                     'image' => 'Image',
                     'video' => 'Video',
-                ]),
-            Forms\Components\FileUpload::make('media')
+                ])
+                ,
+                FileUpload::make('media')
                 ->label('Media')
                 ->downloadable()
+                ->openable()
+                ->imageEditorMode(3)
+                // ->reuplodeable()
                 ->imageEditor()
-                ->disabled(fn ($record) => empty(optional($record)->media_types)) // Disable button if media_types is empty
                 ->required()
-                ->acceptedFileTypes(function ($record) {
-                    $mediaTypes = optional($record)['media_types'];
-    
-                    if ($mediaTypes == 'image') {
-                        return $mediaTypes ? self::getMediaValidationRules($mediaTypes) : ['image/*'];
-                    } elseif ($mediaTypes == 'video') {
-                        return $mediaTypes ? self::getMediaValidationRules($mediaTypes) : ['video/*'];
-                    } 
+                ->reactive(function ($record, $data) {
+                    return $data['media_types'] === 'image' || $data['media_types'] === 'video';
                 }),
-
-    //! ///////////////////////
-            // Forms\Components\FileUpload::make('media')
-            //     ->label('Media')
-            //     ->downloadable()
-            //     ->imageEditor()
-            //     ->required()
-                // ->acceptedFileTypes(function ($state) {
-                //     return $state['media_types'] === 'image' ? ['jpg', 'jpeg', 'png'] : ['video/mp4'];
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     return $record['media_types'] === 'image' ? ['jpg', 'jpeg', 'png'] : ['video/mp4'];
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     return isset($record['media_types']) && $record['media_types'] === 'image' ? ['video/mp4'] : ['image/jpg', 'image/jpeg', 'image/png'] ;
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     $mediaTypes = $record->getState('media_types');
-                //     return isset($mediaTypes) && $mediaTypes === 'image' ? ['image/jpg', 'image/jpeg', 'image/png'] : ['video/mp4'] ;
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     if ($record && isset($record['media_types'])) {
-                //         return $record['media_types'] === 'image' ? ['jpg', 'jpeg', 'png'] : ['video/mp4'];
-                //     }
-                //     return [];
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     if ($record && isset($record['media_types'])) {
-
-                //         dd($record['media_types']);
-                //         // if ($record['media_types'] === 'image') {
-                //         //     return ['jpg', 'jpeg', 'png'];
-                //         // }else 
-                //         // // ($record['media_types'] === 'video')
-                //         //  {
-                //         //     return ['mp4', 'mov', 'avi'];
-                //         // }
-                //         // else{
-                //         //     return 'xyz';
-                //         // }
-                //         // return $record['media_types'] === 'image' ? ['jpg', 'jpeg', 'png'] : ['mp4', 'mov', 'avi'];
-                //     }
-                //     // Handle the case where $record is null or 'media_types' is not set.
-                //     return [];
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     if ($record['media_types'] === 'image') {
-                //         return ['jpg', 'jpeg', 'png'];
-                //     } elseif ($record['media_types'] === 'video') {
-                //         return ['mp4', 'mov', 'avi'];
-                //     }
-
-                //     // Handle the case where 'media_types' is not set or has an unexpected value.
-                //     return [];
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     $mediaTypes = optional($record)['media_types'];
-
-                //     if ($mediaTypes === 'image') {
-                //         return ['jpg', 'jpeg', 'png'];
-                //     } elseif ($mediaTypes === 'video') {
-                //         return ['mp4', 'mov', 'avi'];
-                //     }
-
-                //     return [];
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     $mediaTypes = optional($record)['media_types'];
             
-                //     return $mediaTypes ? $this->getMediaValidationRules($mediaTypes) : ['image/jpg', 'image/jpeg', 'image/png', 'video/mp4'];
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     $mediaTypes = optional($record)['media_types'];
-            
-                //     return $mediaTypes ? self::getMediaValidationRules($mediaTypes) : ['image/jpg', 'image/jpeg', 'image/png', 'video/mp4'];
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     $mediaTypes = optional($record)['media_types'];
-                    
-                //     if ($mediaTypes == 'image') {
-                //         return $mediaTypes ? self::getMediaValidationRules($mediaTypes) : ['image/*'];
-                //     } elseif ($mediaTypes == 'video') {
-                //         return $mediaTypes ? self::getMediaValidationRules($mediaTypes) : ['video/*'];
-                //     } else {
-                //         throw new \Exception('Please select a media type!');
-                //     }
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     $mediaTypes = optional($record)['media_types'];
-                //     dd($mediaTypes);
-                //     if ($mediaTypes == 'video') {
-                //         dd($mediaTypes , 'video');
-                //         // return ['mp4', 'mov', 'avi'];
-                       
-                //     } elseif  ($mediaTypes == 'image') {
-                //         // dd($mediaTypes . ',' . "image");
-                //         return ['image/jpg', 'image/jpeg', 'image/png'];
-                //     }else{
-                //         dd($mediaTypes);
-                //     }
-                // }),
-                // ->acceptedFileTypes(function ($record) {
-                //     $mediaTypes = optional($record)['media_types'];
-            
-                //     // switch ($mediaTypes) {
-                //     //     case 'video':
-                //     //         // return ['video/mp4'];
-                //     //         dd('video');
-                //     //         break;
-                //     //     case 'image':
-                //     //         // return ['image/jpg', 'image/jpeg', 'image/png'];
-                //     //         dd('image');
-                //     //         break;
-                //     //     default:
-                //     //         return [];
-                //     //         // dd(null);
-                //     //         break;
-                //     // }
-                //     if ($mediaTypes == 'video') {
-                //                 dd($mediaTypes , 'video');
-                //                 // return ['mp4', 'mov', 'avi'];
-                               
-                //             } elseif  ($mediaTypes == 'image') {
-                //                 dd($mediaTypes . ',' . "image");
-                //                 // return ['image/jpg', 'image/jpeg', 'image/png'];
-                //             }
-                //             // else{
-                //             //     dd($mediaTypes);
-                //             // }
-                // }),
-                //  ->acceptedFileTypes(function ($record) {
-                //         if ($record && isset($record['media_types'])) {
-                //             return $record['media_types'] === 'image' ? ['image/jpg', 'image/jpeg', 'image/png'] : ['video/mp4'] ;
-                //         }
-                //         return [];
-                //     }),
-                //  ->acceptedFileTypes(function ($record) {
-                //     $mediaTypes = optional($record)['media_types'];
-                    
-                //     if ($mediaTypes == 'image') {
-                //         return $mediaTypes ? self::getMediaValidationRules($mediaTypes) : ['image/*'];
-                //     } elseif ($mediaTypes == 'video') {
-                //         return $mediaTypes ? self::getMediaValidationRules($mediaTypes) : ['video/*'];
-                //     } 
-                // }),
-        
-                
 
+                ViewField::make('rating')
+                ->view('filament.pages.create-banner')
+        ];
+    
+        // // Create the first section
+        // $firstSection = Section::make('First Section')
+        // ->schema($firstformFields)
+        // ->columns(2);
 
+        // Create the second section
+        $secondSection = Section::make('Second Section')
+            ->schema($secondformFields)
+            ->columns(2);
 
-        ]);
+        // Add both sections to the form
+        $form->schema([ $secondSection]);
+
+        // Return the form instance
+        return $form;
     }
-    // public function updatedMediaTypes($value)
+    
+    // public static function form(Form $form): Form
     // {
-    //     $this->validateOnly('media', $this->getMediaValidationRules($value));
+    //     // Create a new Form instance
+    //     $form = Form::make();
+    
+    //     // Define the form fields for the first section of the profile editing
+    //     $firstSectionFields = [
+    //         Select::make('banner_place')
+    //             ->label('Banner Place')
+    //             ->required()
+    //             ->options([
+    //                 'Home' => 'Home',
+    //                 'About_us' => 'About Us',
+    //             ]),
+    //         TextInput::make('title')
+    //             ->label('Title')
+    //             ->required()
+    //             ->maxLength(255),
+    //         Textarea::make('description')
+    //             ->label('Description')
+    //             ->maxLength(255)
+    //             ->required(),
+    //         Select::make('status')
+    //             ->required()
+    //             ->options([
+    //                 '0' => 'Active',
+    //                 '1' => 'Deactive',
+    //             ]),
+    //         Select::make('media_types')
+    //             ->label('Media Type')
+    //             ->required()
+    //             ->options([
+    //                 'image' => 'Image',
+    //                 'video' => 'Video',
+    //             ]),
+    //         Select::make('Image')
+    //             ->label('Image')
+    //             ->required()
+    //             ->options([
+    //                 'image' => 'Image',
+    //                 'video' => 'Video',
+    //             ])
+    //     ];
+    
+    //     // Define the form fields for the second section of the profile editing
+    //     $secondSectionFields = [
+    //         Select::make('banner_place')
+    //             ->label('Banner Place')
+    //             ->required()
+    //             ->options([
+    //                 'Home' => 'Home',
+    //                 'About_us' => 'About Us',
+    //             ]),
+    //         TextInput::make('title')
+    //             ->label('Title')
+    //             ->required()
+    //             ->maxLength(255),
+    //         Textarea::make('description')
+    //             ->label('Description')
+    //             ->maxLength(255)
+    //             ->required(),
+    //         Select::make('status')
+    //             ->required()
+    //             ->options([
+    //                 '0' => 'Active',
+    //                 '1' => 'Deactive',
+    //             ]),
+    //         Select::make('media_types')
+    //             ->label('Media Type')
+    //             ->required()
+    //             ->options([
+    //                 'image' => 'Image',
+    //                 'video' => 'Video',
+    //             ])
+    //     ];
+    
+    //     // Create the first section
+    //     $firstSection = Section::make('First Section')
+    //         ->schema($firstSectionFields)
+    //         ->columns(2);
+    
+    //     // Create the second section
+    //     $secondSection = Section::make('Second Section')
+    //         ->schema($secondSectionFields)
+    //         ->columns(2);
+    
+    //     // Add both sections to the form
+    //     $form->schema([$firstSection, $secondSection]);
+    
+    //     return $form;
     // }
 
-    private function getMediaValidationRules($mediaType)
-    {
-        $commonRules = ['file']; // Common file rules
+//     public static function form(Form $form): Form
+// {
+//     // Define the first form
+//     $form1 = $form->schema(function (Form $form) {
+//         $form->schema([
+//             TextInput::make('field1')->label('Field 1'),
+//             TextInput::make('field2')->label('Field 2'),
+//         ]);
+//     });
+
+//     // Define the second form
+//     $form2 = $form->schema(function (Form $form) {
+//         $form->schema([
+//             Textarea::make('field3')->label('Field 3'),
+//             Textarea::make('field4')->label('Field 4'),
+//         ]);
+//     });
+
+//     // Return an array of forms
+//     return [$form1, $form2];
+// }
     
-        if ($mediaType === 'image') {
-            return ['mimes:jpeg,png,jpg,gif'];
-        } elseif ($mediaType === 'video') {
-            return ['mimes:mp4,mov,avi'];
-        }
     
-        // Return default rules if media type is not specified
-        return $commonRules;
-    }
+    
+    
+    
+    
+    
+    
     
 
     public static function table(Table $table): Table
